@@ -1,4 +1,4 @@
-# TULIS_DI_SINI: nama aplikasi
+# Phrasia
 
 > Baca `SOAL.md` dulu. Proposal dan Laporan Akhir dikumpulkan di Classroom (bukan di repo). Ganti semua `TULIS_DI_SINI` di berkas ini dan berkas catatan lain. Berkas yang masih memuat
 > `TULIS_DI_SINI` dianggap belum diisi.
@@ -11,7 +11,7 @@
 
 | Nama | NRP | Akun GitHub |
 |---|---|---|
-| TULIS_DI_SINI | | |
+| Galih Arsandy Tawakal | 5025251074 | Gandywa |
 | | | |
 | | | |
 
