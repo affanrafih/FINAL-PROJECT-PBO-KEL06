@@ -12,7 +12,7 @@
 | Nama | NRP | Akun GitHub |
 |---|---|---|
 | Galih Arsandy Tawakal | 5025251074 | Gandywa |
-| | | |
+| Khen Patra Yabes Sianipar | 5025251227 | Arkeinea |
 | | | |
 
 ## Ide dan pembeda
