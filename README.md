@@ -13,7 +13,7 @@
 |---|---|---|
 | Galih Arsandy Tawakal | 5025251074 | Gandywa |
 | Khen Patra Yabes Sianipar | 5025251227 | Arkeinea |
-| | | |
+| Affan Rafi Habibie | 5025251265 | affnrafih |
 
 ## Ide dan pembeda
 
