@@ -17,12 +17,12 @@
 
 ## Ide dan pembeda
 
-- Ide dalam satu kalimat: TULIS_DI_SINI
-- Apa yang membuatnya berbeda dari aplikasi serupa lain: TULIS_DI_SINI
+- Ide dalam satu kalimat: Program pembelajaran Bahasa Inggris dengan dasar Listening/Mendengarkan.
+- Apa yang membuatnya berbeda dari aplikasi serupa lain: Menggunakan metode Listening/Mendengarkan agar pengguna dapat membiasakan diri dengan mendengarkan bahasa inggris.
 
 ## Untuk guru
 
-- Mata pelajaran dan jenjang: TULIS_DI_SINI
+- Mata pelajaran dan jenjang: Bahasa Inggris
 - Tujuan belajar: TULIS_DI_SINI
 - Cakupan materi (dan sumber rujukannya): TULIS_DI_SINI
 - Cara menjalankan dan memakai: TULIS_DI_SINI
