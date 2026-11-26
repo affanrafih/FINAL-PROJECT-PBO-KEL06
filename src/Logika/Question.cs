@@ -30,4 +30,10 @@ public abstract class Question
         string verdict = isCorrect ? "Benar!" : "Belum tepat.";
         return $"{verdict} {Explanation}";
     }
+
+    public override string ToString()
+    {
+        return $"{GetType().Name}: {Prompt}";
+    }
+
 }
