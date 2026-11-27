@@ -34,14 +34,155 @@ yang cocok dengan kode.
 
 ```mermaid
 classDiagram
-    class Induk {
+    direction TB
+
+    class Question {
         <<abstract>>
+        +string Prompt
+        +string Explanation
+        +int Points
+        #Question(string prompt, string explanation, int points)
+        +Evaluate(string answer)* bool
+        +BuildFeedback(bool isCorrect) string
+        +ToString() string
     }
-    Induk <|-- TurunanA
-    Induk <|-- TurunanB
+
+    class ArrangeSentenceQuestion {
+        +IReadOnlyList~string~ Phrases
+        +string CorrectSentence
+        +Evaluate(string answer) bool
+        +BuildFeedback(bool isCorrect) string
+    }
+
+    class CompleteSentenceQuestion {
+        +IReadOnlyList~string~ Choices
+        +int CorrectIndex
+        +Evaluate(string answer) bool
+        +BuildFeedback(bool isCorrect) string
+    }
+
+    class VocabularyQuestion {
+        +string Word
+        +string SpeechText
+        +Evaluate(string answer) bool
+        +BuildFeedback(bool isCorrect) string
+    }
+
+    class Level {
+        +string Title
+        +int Number
+        +IReadOnlyList~Question~ Questions
+        +Level(string title)
+        +Level(string title, int number)
+        +AddQuestion(Question q) void
+        +IsCompleted(int correctCount) bool
+    }
+
+    class UserProgress {
+        +int TotalScore
+        +AddScore(int points) void
+        +SetStars(int levelNumber, int stars) void
+        +GetStars(int levelNumber) int
+        +IsLevelUnlocked(int levelNumber) bool
+    }
+
+    class GameSession {
+        <<IDisposable>>
+        +event AnswerEvaluated
+        +event LevelCompleted
+        +GameSession(Level level, UserProgress progress, IProgressStore store, ITextToSpeech tts)
+        +Submit(string answer) bool
+        +Speak(string text) void
+        +Dispose() void
+    }
+
+    class IProgressStore {
+        <<interface>>
+        +Load() UserProgress
+        +Save(UserProgress progress) void
+    }
+
+    class JsonProgressStore {
+        +Load() UserProgress
+        +Save(UserProgress progress) void
+    }
+
+    class InMemoryProgressStore {
+        +Load() UserProgress
+        +Save(UserProgress progress) void
+    }
+
+    class ITextToSpeech {
+        <<interface>>
+        +bool IsAvailable
+        +Speak(string text) void
+    }
+
+    class SystemSpeechService {
+        +bool IsAvailable
+        +Speak(string text) void
+    }
+
+    class SilentSpeechService {
+        +bool IsAvailable
+        +Speak(string text) void
+    }
+
+    class InvalidAnswerException {
+        +InvalidAnswerException(string message)
+    }
+
+    class ProgressFileCorruptException {
+        +ProgressFileCorruptException(string message, Exception inner)
+    }
+
+    class LearnForm {
+        <<Aplikasi, WinForms>>
+    }
+
+    class ResultForm {
+        <<Aplikasi, WinForms>>
+    }
+
+    Question <|-- ArrangeSentenceQuestion
+    Question <|-- CompleteSentenceQuestion
+    Question <|-- VocabularyQuestion
+    Exception <|-- InvalidAnswerException
+    Exception <|-- ProgressFileCorruptException
+
+    Level *-- Question
+    GameSession *-- Level
+    GameSession *-- UserProgress
+
+    IProgressStore <|.. JsonProgressStore
+    IProgressStore <|.. InMemoryProgressStore
+    ITextToSpeech <|.. SystemSpeechService
+    ITextToSpeech <|.. SilentSpeechService
+
+    GameSession ..> IProgressStore
+    GameSession ..> ITextToSpeech
+
+    GameSession ..> InvalidAnswerException
+    JsonProgressStore ..> ProgressFileCorruptException
+
+    LearnForm ..> GameSession
+    ResultForm ..> GameSession
+    LearnForm ..> ITextToSpeech
 ```
 
-TULIS_DI_SINI
+Alur satu soal: siswa menjawab di `LearnForm`, form memanggil `GameSession.Submit()`, sesi menilai lewat `Question.Evaluate()`, lalu memicu event `AnswerEvaluated`. Form itu memperbarui umpan balik dan skor. Saat level selesai, event `LevelCompleted` ditangkap `ResultForm` untuk menampilkan skor dan bintang.
+
+**Polimorfisme dan Template Method pada soal**   
+`Question` adalah abstract class dengan `Evaluate()` (abstract) dan `BuildFeedback()` (virtual). Tiga jenis soal (`ArrangeSentenceQuestion`, `CompleteSentenceQuestion`, `VocabularyQuestion`) mengisi aturan penilaiannya sendiri. `GameSession` menilai semua soal lewat satu pemanggilan tanpa mengecek tipe, sehingga jenis soal baru bisa ditambah tanpa mengubah kelas lain.
+
+**Strategy untuk penyimpanan dan suara**  
+`IProgressStore` (`JsonProgressStore`, `InMemoryProgressStore`) dan `ITextToSpeech` (`SystemSpeechService`, `SilentSpeechService`) adalah cara kerja yang dapat ditukar. Keduanya disuntikkan ke `GameSession` lewat konstruktor (Dependency Injection), jadi logika tidak terikat ke berkas atau suara Windows.
+
+**Null Object**  
+`SilentSpeechService` dipakai saat suara bahasa Inggris tidak tersedia di komputer. Aplikasi tetap berjalan tanpa perlu `if` pengecekan di setiap pemanggilan `Speak()`.
+
+**Observer lewat event C#**  
+`GameSession` mengumumkan `AnswerEvaluated` dan `LevelCompleted`, sementara form berlangganan. Logika tidak perlu tahu form mana yang mendengarkan.
 
 ## Cara menjalankan (untuk pengembang)
 
